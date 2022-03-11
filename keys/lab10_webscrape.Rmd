@@ -74,12 +74,12 @@ load(here::here('data', "panic_songs.Rdata"))
 get_lyrics<-function(song,artist,album,year){
     
  #Create url base
-  base1<-c("https://songlyrics.com/")
+  base1<-c("https://songlyrics.com/") # every URL is gonna start this way
 
-  base2<-c("-lyrics")
+  base2<-c("-lyrics") # every URL is gonna end this way
 
 #Clean the artist name and song name to match the url
-  artist_url<-str_replace_all(artist,pattern = "(?!\\!)[[:punct:]]",replacement = " ") %>% 
+  artist_url<-str_replace_all(artist,pattern = "(?!\\!)[[:punct:]]",replacement = " ") %>%
     str_replace_all(pattern = " ",replacement = "-") %>%
     str_to_lower() %>% 
     str_squish()
@@ -135,12 +135,12 @@ get_lyrics<-function(song,artist,album,year){
 
 ```{r runpurr}
 ### Run the map to get the song lyrics then clean up the dataframe
-safe_get_ly<-safely(get_lyrics)
+safe_get_ly<-safely(get_lyrics) # safely tells it to keep going when you hit an error, but keep track of the error
 
 
-  song_lyrics<-pmap(patd_df,safe_get_ly) %>% transpose()
+  song_lyrics<-pmap(patd_df,safe_get_ly) %>% transpose() # pmap maps over everything
   
-  any_errors_lyrics<-compact(song_lyrics$error)
+  any_errors_lyrics<-compact(song_lyrics$error) # compact lets you know when there are errors
   
   
 #Extract the data from the lists  
