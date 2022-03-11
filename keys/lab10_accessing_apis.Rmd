@@ -35,7 +35,7 @@ Also, check out https://shiny.rstudio.com/articles/shinyapps.html to deploy your
     - now in your code, you can access this key with `api_key <- Sys.getenv('IUCN_KEY')`
 
 ```{r}
-api_key <- Sys.getenv('IUCN_KEY')
+api_key <- Sys.getenv('IUCN_KEY') # this pulls the IUCN key from r environ
 ```
 
 ### Get the IUCN Redlist version: look up the endpoint on the reference!
@@ -47,9 +47,9 @@ Version endpoint: `/api/v3/version` (no token needed!)
 ```{r}
 ### append the endpoint to the domain name: 
 domain_name <- 'http://apiv3.iucnredlist.org'
-version_end <- 'api/v3/version'
+version_end <- 'api/v3/version' # drop the leading slash mark - not totally sure why 
 
-version_url <- file.path(domain_name, version_end)
+version_url <- file.path(domain_name, version_end) # sort of like here()
 api_version <- jsonlite::fromJSON(version_url)
 api_version$version
 ```
@@ -73,7 +73,7 @@ spp_count$count
 
 page endpoint: `/api/v3/species/page/:page_number?token='YOUR TOKEN'`
 ```{r}
-page_stem <- 'api/v3/species/page/%s?token=%s'
+page_stem <- 'api/v3/species/page/%s?token=%s'# %s means that I'm gonna put a string in there
 page_end <- sprintf(page_stem, 1, api_key) ### multiple variables into format string
 page_url <- file.path(domain_name, page_end)
 
@@ -142,7 +142,7 @@ spp_ids <- read_csv(here('data/am_spp_ids.csv'))
 
 ```{r NO PEEKING}
 spp_risk_cells <- spp_cells %>%
-  inner_join(cell_ids, by = 'loiczid') %>%
+  inner_join(cell_ids, by = 'loiczid') %>% # inner join only keeps data that shows up in both dataframes 
   inner_join(spp_ids, by = 'am_sid') %>%
   inner_join(iucn_spp_info, by = c('binomial' = 'sciname'))
 
@@ -151,7 +151,7 @@ threatened_pct_cells <- spp_risk_cells %>%
   mutate(threatened = (tolower(cat) %in% c('vu', 'en', 'cr'))) %>%
   filter(cat != 'dd') %>%
   group_by(lon, lat) %>%
-  summarize(pct_threatened = sum(threatened) / n())
+  summarize(pct_threatened = sum(threatened) / n()) # this works because T and F are also counted as 1 and 0
 ```
 
 ### Convert cells into a raster object
@@ -190,6 +190,7 @@ Note, we can access individual countries, or continents, or states; but we proba
 land_sf <- rnaturalearth::ne_countries(scale = 50, ### start with 110
                                        country = c('united states of america', 'mexico'),
                                        returnclass = 'sf')
+# also look into rnaturalearth high res and other variations of this package
 # plot(land_sf %>% select(geometry))
 # st_crs(land_sf)
 
@@ -201,6 +202,7 @@ ggplot() +
   geom_sf(data = land_sf_cropped, fill = 'grey80', color = 'grey40', alpha = .5) +
   scale_fill_viridis_c() +
   coord_sf() +
-  theme_void()
+  theme_void() +
+  theme(legend.position = c(.73, .7))
 ```
 

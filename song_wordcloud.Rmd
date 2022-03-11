@@ -1,0 +1,105 @@
+---
+title: "mcr"
+author: "Lucas Boyd"
+date: "3/10/2022"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+library(tidyverse)
+library(tidytext)
+library(rvest)
+library(cowplot)
+library(ggwordcloud)
+
+```
+
+
+```{r}
+ black_parade <- read_html("http://www.songlyrics.com/my-chemical-romance/welcome-to-the-black-parade-lyrics/") %>% 
+    html_nodes("#songLyricsDiv") %>% 
+  html_text() %>% 
+  str_replace_all("\n", " ") %>%  # replace linebreaks with a space 
+  str_remove_all(pattern = "[:punct:]") %>% 
+  str_to_lower() %>% 
+  str_split(" ") %>% 
+  as.data.frame()
+
+colnames(black_parade) [1] <- "word" # replacing the ugly column name with just word
+
+black_parade_clean <- black_parade %>% 
+  anti_join(stop_words, by = "word")
+
+top_100_bp <- black_parade_clean %>% 
+  count(word) %>% 
+  arrange(-n) %>% 
+  slice(1:100)
+
+ggplot(data=top_100_bp,aes(label=word))+
+  geom_text_wordcloud(aes(color=n,size=n),shape="diamond")+
+  scale_size_area(max_size = 10)+
+  scale_color_gradientn(colors = c("red","orange","gold"))+
+  theme_minimal()
+```
+
+```{r}
+ black_parade <- read_html("http://www.songlyrics.com/hinder/lips-of-an-angel-lyrics/") %>% 
+    html_nodes("#songLyricsDiv") %>% 
+  html_text() %>% 
+  str_replace_all("\n", " ") %>%  # replace linebreaks with a space 
+  str_remove_all(pattern = "[:punct:]") %>% 
+  str_to_lower() %>% 
+  str_split(" ") %>% 
+  as.data.frame()
+
+colnames(black_parade) [1] <- "word" # replacing the ugly column name with just word
+
+black_parade_clean <- black_parade %>% 
+  anti_join(stop_words, by = "word")
+
+top_100_bp <- black_parade_clean %>% 
+  count(word) %>% 
+  arrange(-n) %>% 
+  slice(1:100)
+
+ggplot(data=top_100_bp,aes(label=word))+
+  geom_text_wordcloud(aes(color=n,size=n),shape="diamond")+
+  scale_size_area(max_size = 10)+
+  scale_color_gradientn(colors = c("red","orange","gold"))+
+  theme_minimal()
+```
+
+```{r}
+ black_parade <- read_html("http://www.songlyrics.com/dwayne-johnson/you-re-welcome-lyrics/") %>% 
+    html_nodes("#songLyricsDiv") %>% 
+  html_text() %>% 
+  str_replace_all("\n", " ") %>%  # replace linebreaks with a space 
+  str_remove_all(pattern = "[:punct:]") %>% 
+  str_to_lower() %>% 
+  str_split(" ") %>% 
+  as.data.frame()
+
+colnames(black_parade) [1] <- "word" # replacing the ugly column name with just word
+
+black_parade_clean <- black_parade %>% 
+  anti_join(stop_words, by = "word")
+
+top_100_bp <- black_parade_clean %>% 
+  count(word) %>% 
+  arrange(-n) %>% 
+  slice(1:100)
+
+ggplot(data=top_100_bp,aes(label=word))+
+  geom_text_wordcloud(aes(color=n,size=n),shape="diamond")+
+  scale_size_area(max_size = 10)+
+  scale_color_gradientn(colors = c("red","orange","gold"))+
+  theme_minimal()
+```
+
+
+
+
+
+
